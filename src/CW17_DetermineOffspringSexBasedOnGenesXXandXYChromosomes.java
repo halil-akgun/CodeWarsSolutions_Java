@@ -14,6 +14,7 @@ public class CW17_DetermineOffspringSexBasedOnGenesXXandXYChromosomes {
     public static void main(String[] args) {
         System.out.println(chromosomeCheck("XY"));
     }
+
     public static String chromosomeCheck(String sperm) {
         if (sperm.contains("Y")) return "Congratulations! You're going to have a son.";
         return "Congratulations! You're going to have a daughter.";
