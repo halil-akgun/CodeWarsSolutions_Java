@@ -20,6 +20,13 @@ public class CW43_WilsonPrimes {
         BigInteger result = factorial.add(BigInteger.ONE);
         BigInteger modulus = BigInteger.valueOf((long) (n * n));
         return isPrime(BigInteger.valueOf((long) n)) && result.mod(modulus).equals(BigInteger.ZERO);
+
+
+//        long modulus = (long) (n * n);
+//        long product = 1;
+//        for (long factor = 2; factor < n; factor++)
+//            product = (product * factor) % modulus;
+//        return product + 1 == modulus;
     }
 
     private static boolean isPrime(BigInteger n) {
