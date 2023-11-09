@@ -1,4 +1,4 @@
-package _7kyu;
+package _6kyu;
 
 import java.util.Arrays;
 import java.util.Comparator;
@@ -17,7 +17,7 @@ Examples
 "4of Fo1r pe6ople g3ood th5e the2"  -->  "Fo1r the2 g3ood 4of th5e pe6ople"
 ""  -->  ""
  */
-public class CW34_YourOrderPlease {
+public class CW15_YourOrderPlease {
     public static void main(String[] args) {
         System.out.println(order("is2 Thi1s T4est 3a"));
     }
