@@ -26,13 +26,39 @@ but the first sums to 23 and the second to 22. No other sets work either.
  */
 public class CW31_TwoSetsOfEqualSum {
     public static void main(String[] args) {
-        System.out.println(createTwoSetsOfEqualSum(8));
+        List<List<Integer>> result = createTwoSetsOfEqualSum(527612);
+        result.forEach(System.out::println);
+
+        // Sum of the first set
+        int sumSet1 = result.get(0).stream().mapToInt(Integer::intValue).sum();
+        System.out.println("Sum of Set 1: " + sumSet1);
+
+        // Sum of the second set
+        int sumSet2 = result.get(1).stream().mapToInt(Integer::intValue).sum();
+        System.out.println("Sum of Set 2: " + sumSet2);
     }
 
     private static List<List<Integer>> createTwoSetsOfEqualSum(int n) {
 
-        List<List<Integer>> sets = new ArrayList<>();
+        long totalSum = ((long) n * (n + 1)) / 2;
 
-        return sets;
+        if (totalSum % 2 != 0) {
+            return List.of(new ArrayList<>(), new ArrayList<>()); // not possible
+        }
+
+        long halfSum = totalSum / 2;
+        List<Integer> set1 = new ArrayList<>();
+        List<Integer> set2 = new ArrayList<>();
+
+        for (int i = n; i > 0; i--) {
+            if (i <= halfSum) {
+                set1.add(i);
+                halfSum -= i;
+            } else {
+                set2.add(i);
+            }
+        }
+
+        return List.of(set1, set2);
     }
 }
