@@ -1,7 +1,7 @@
 package _6kyu;
 
-import java.util.Arrays;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 /*
 Everyone knows passphrases. One can choose passphrases from poems, songs, movies names and so on
@@ -28,10 +28,19 @@ public class CW47_PlayingWithPassphrases {
     }
 
     public static String playPass(String s, int n) {
-        return Arrays.stream(s.split(""))
-                .map(t ->
-                        Character.isAlphabetic(t.charAt(0)) ? t = Character.toString(t.charAt(0) + n)
-                                : Character.isDigit(t.charAt(0)) ? t = Character.toString('9' - t.charAt(0) + '0') : t)
-                .collect(Collectors.joining());
+        String shiftedTransformed = IntStream.range(0, s.length())
+                .mapToObj(i -> {
+                    char c = s.charAt(i);
+                    if (Character.isAlphabetic(c)) {
+                        char shifted = (char) ((c - 'A' + n) % 26 + 'A');
+                        return i % 2 == 0 ? Character.toString(shifted).toUpperCase() : Character.toString(shifted).toLowerCase();
+                    } else if (Character.isDigit(c)) {
+                        return Character.toString('9' - c + '0');
+                    } else {
+                        return Character.toString(c);
+                    }
+                }).collect(Collectors.joining());
+
+        return new StringBuilder(shiftedTransformed).reverse().toString();
     }
 }
