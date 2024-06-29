@@ -21,6 +21,8 @@ public class CW48_TimeMath {
 
     public static String timeMath(final String time1, final String op, final String time2) {
 
+/*
+        // way 1 (randomTests is failing)
         int[] time1Arr = Arrays.stream(time1.split(":")).mapToInt(Integer::parseInt).toArray();
         int[] time2Arr = Arrays.stream(time2.split(":")).mapToInt(Integer::parseInt).toArray();
 
@@ -32,5 +34,94 @@ public class CW48_TimeMath {
                 : localTime1.minusHours(localTime2.getHour()).minusMinutes(localTime2.getMinute()).minusSeconds(localTime2.getSecond());
 
         return String.format("%02d:%02d:%02d", result.getHour(), result.getMinute(), result.getSecond());
+*/
+
+        // way 2
+        int[] time1Arr = Arrays.stream(time1.split(":")).mapToInt(Integer::parseInt).toArray();
+        int[] time2Arr = Arrays.stream(time2.split(":")).mapToInt(Integer::parseInt).toArray();
+
+        if (op.equals("+")) {
+            return addTime(time1Arr, time2Arr);
+        } else {
+            return subtractTime(time1Arr, time2Arr);
+        }
+    }
+
+    private static String addTime(int[] time1Arr, int[] time2Arr) {
+        boolean add = false;
+        int[] result = new int[3];
+        int seconds = time1Arr[2] + time2Arr[2];
+        if (seconds >= 60) {
+            seconds -= 60;
+            add = true;
+        }
+        int minutes = time1Arr[1] + time2Arr[1] + (add ? 1 : 0);
+        add = false;
+        if (minutes >= 60) {
+            minutes -= 60;
+            add = true;
+        }
+        int hours = time1Arr[0] + time2Arr[0] + (add ? 1 : 0);
+        if (hours >= 24) {
+            hours -= 24;
+        }
+        result[0] = hours;
+        result[1] = minutes;
+        result[2] = seconds;
+        return String.format("%02d:%02d:%02d", result[0], result[1], result[2]);
+    }
+
+    private static String subtractTime(int[] time1Arr, int[] time2Arr) {
+        boolean subtract = false;
+        int[] result = new int[3];
+        int seconds = time1Arr[2] - time2Arr[2];
+        if (seconds < 0) {
+            seconds += 60;
+            subtract = true;
+        }
+        int minutes = time1Arr[1] - time2Arr[1] - (subtract ? 1 : 0);
+        subtract = false;
+        if (minutes < 0) {
+            minutes += 60;
+            subtract = true;
+        }
+        int hours = time1Arr[0] - time2Arr[0] - (subtract ? 1 : 0);
+        if (hours < 0) {
+            hours += 24;
+        }
+        result[0] = hours;
+        result[1] = minutes;
+        result[2] = seconds;
+        return String.format("%02d:%02d:%02d", result[0], result[1], result[2]);
+    }
+
+    // allexva's solution:
+    public static String timeMath2(final String time1, final String op, final String time2) {
+        int sec1 = split(time1);
+        int sec2 = split(time2);
+
+        int result = 0;
+        switch (op) {
+            case "+":
+                result = (sec1 + sec2) % (60 * 60 * 24);
+                break;
+            case "-":
+                result = (sec1 - sec2) % (60 * 60 * 24);
+                if (result < 0) result += 86400;
+                break;
+        }
+
+        int hour = result / 3600 % 24;
+        int minute = (result % 3600) / 60;
+        int sec = result % 60;
+
+        return String.format("%02d:%02d:%02d", hour, minute, sec);
+    }
+
+    public static int split(String time) {
+        String[] array = time.split(":");
+        return (Integer.parseInt(array[0]) * 60 * 60
+                + Integer.parseInt(array[1]) * 60
+                + Integer.parseInt(array[2])) % (24 * 60 * 60);
     }
 }
