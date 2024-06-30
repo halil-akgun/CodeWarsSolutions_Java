@@ -21,7 +21,9 @@ reverse_fizzbuzz("Fizz Buzz")              -->  [9, 10]
  */
 public class CW49_ReverseFizzBuzz {
     public static void main(String[] args) {
-
+        System.out.println(reverseFizzBuzz("1 2 Fizz 4 Buzz"));
+        System.out.println(reverseFizzBuzz("Fizz 688 689 FizzBuzz"));
+        System.out.println(reverseFizzBuzz("Fizz Buzz"));
     }
 
     public static List<Integer> reverseFizzBuzz(String string) {
