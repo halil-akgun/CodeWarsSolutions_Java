@@ -1,6 +1,7 @@
 package _6kyu;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /*
@@ -27,6 +28,56 @@ public class CW49_ReverseFizzBuzz {
     }
 
     public static List<Integer> reverseFizzBuzz(String string) {
-        return new ArrayList<>();
+
+        String[] arr = string.split(" ");
+        int[] result = new int[arr.length];
+
+        int firstNumber = 0;
+        boolean foundNumber = false;
+
+        for (int i = 0; i < arr.length; i++) {
+            if (isNumber(arr[i])) {
+                firstNumber = Integer.parseInt(arr[i]) - i;
+                foundNumber = true;
+                break;
+            }
+        }
+
+        if (foundNumber) {
+            for (int i = 0; i < result.length; i++) {
+                result[i] = firstNumber + i;
+            }
+            return Arrays.stream(result).boxed().toList();
+        } else {
+            switch (string) {
+                case "Fizz Buzz" -> {
+                    return List.of(9, 10);
+                }
+                case "Fizz" -> {
+                    return List.of(3);
+                }
+                case "Buzz" -> {
+                    return List.of(5);
+                }
+                case "Buzz Fizz" -> {
+                    return List.of(5, 6);
+                }
+                case "FizzBuzz" -> {
+                    return List.of(15);
+                }
+                default -> {
+                    return new ArrayList<>();
+                }
+            }
+        }
+    }
+
+    private static boolean isNumber(String s) {
+        try {
+            Integer.parseInt(s);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
     }
 }
