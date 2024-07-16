@@ -90,10 +90,10 @@ public class CW14_CodingWithSquaredStrings {
                     lines[(lines.length - 1) - border][j] = lines[(lines.length - 1) - border][j + 1];
                 }
                 // to the bottom
-                for (int j = (lines.length - 1) - border; j > border+1; j--) {
+                for (int j = (lines.length - 1) - border; j > border + 1; j--) {
                     lines[j][(lines.length - 1) - border] = lines[j - 1][(lines.length - 1) - border];
                 }
-                lines[border+1][(lines.length - 1) - border] = rightTop;
+                lines[border + 1][(lines.length - 1) - border] = rightTop;
             }
             border++;
         }
