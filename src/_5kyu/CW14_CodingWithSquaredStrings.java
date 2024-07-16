@@ -41,6 +41,7 @@ leading/trailing whitespace, i.e. you do not and should not trim the input strin
  */
 public class CW14_CodingWithSquaredStrings {
     public static void main(String[] args) {
+        System.out.println(code("")); // c.nhsoI\nltiahi.\noentinw\ncng.nga\nk..mg.s\n\voao.f.\n\v'trtig
         System.out.println(code("I.was.going.fishing.that.morning.at.ten.o'clock")); // c.nhsoI\nltiahi.\noentinw\ncng.nga\nk..mg.s\n\voao.f.\n\v'trtig
         System.out.println(decode(code("I.was.going.fishing.that.morning.at.ten.o'clock"))); // I.was.going.fishing.that.morning.at.ten.o'clock
     }
@@ -65,6 +66,9 @@ public class CW14_CodingWithSquaredStrings {
         for (char[] chars : arr) {
             sb.append(chars).append('\n');
         }
+
+        if (!sb.isEmpty() && sb.charAt(sb.length() - 1) == '\n') sb.deleteCharAt(sb.length() - 1);
+
         return sb.toString();
     }
 
@@ -96,6 +100,6 @@ public class CW14_CodingWithSquaredStrings {
     }
 
     public static String decode(String s) {
-        return code(code(code(s)));
+        return code(code(code(s))).replaceAll("\n", "").replaceAll("\u000B", "");
     }
 }
