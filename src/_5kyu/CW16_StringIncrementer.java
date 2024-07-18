@@ -1,5 +1,7 @@
 package _5kyu;
 
+import java.math.BigInteger;
+
 /*
 Your job is to write a function which increments a string, to create a new string.
 
@@ -38,6 +40,10 @@ public class CW16_StringIncrementer {
         } else {
             return str.substring(0, str.length() - num.length()) + incrementNum(num.toString());
         }
+
+        // shoplucaaa, pavliivandriana:
+//        String u = java.util.regex.Pattern.compile("(\\d+)$").matcher(str).replaceAll(x -> String.format("%0" + x.group().length() +"d", new BigInteger(x.group()).add(BigInteger.ONE)));
+//        return u.matches(".*(?<!\\d)")?u+1:u;
     }
 
     private static String incrementNum(String num) {
