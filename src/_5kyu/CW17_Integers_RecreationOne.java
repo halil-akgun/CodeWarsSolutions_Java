@@ -1,6 +1,7 @@
 package _5kyu;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /*
@@ -30,10 +31,34 @@ public class CW17_Integers_RecreationOne {
     }
 
     public static String listSquared(long m, long n) {
-        // your code
+        List<long[]> resultList = new ArrayList<>();
+
+        for (long i = m; i <= n; i++) {
+            long sum = sumOfSquaredDivisorsIfSquare(i);
+            if (sum != -1) {
+                resultList.add(new long[]{i, sum});
+            }
+        }
+
+        long[][] result = new long[resultList.size()][];
+        for (int i = 0; i < resultList.size(); i++) {
+            result[i] = resultList.get(i);
+        }
+
+        return Arrays.deepToString(result);
     }
 
-    private static int getSumOfSquaresIfPerfectSquare(long num) {
-        List<Integer> list = new ArrayList<>();
+    private static long sumOfSquaredDivisorsIfSquare(long num) {
+        List<Long> list = new ArrayList<>();
+
+        for (long i = 1; i <= num; i++) {
+            if (num % i == 0) {
+                list.add(i * i);
+            }
+        }
+
+        long sum = list.stream().reduce(0L, Long::sum);
+
+        return Math.pow((int) Math.sqrt(sum), 2) == sum ? sum : -1;
     }
 }
