@@ -139,35 +139,76 @@ final class PeanoNumbers {
     }
 
     static Peano sub(Peano a, Peano b) {
-        if (a instanceof Peano.Zero) {
+        if (b instanceof Peano.Zero) {
             return a;
-        } else if (a instanceof Peano.Succ) {
-            if (b instanceof Peano.Zero) {
-                return a;
-            } else if (b instanceof Peano.Succ) {
-                return sub(((Peano.Succ) a).getPeano(), ((Peano.Succ) b).getPeano());
-            }
+        } else if (a instanceof Peano.Zero) {
+            throw new ArithmeticException("negative number");
+        } else if (a instanceof Peano.Succ && b instanceof Peano.Succ) {
+            return sub(((Peano.Succ) a).getPeano(), ((Peano.Succ) b).getPeano());
         }
         throw new IllegalArgumentException("Unknown Peano number type");
     }
 
     static Peano mul(Peano a, Peano b) {
-        return a;
+        if (b instanceof Peano.Zero) {
+            return Peano.Zero.INSTANCE;
+        } else if (b instanceof Peano.Succ) {
+            return add(mul(a, ((Peano.Succ) b).getPeano()), a);
+        }
+        throw new IllegalArgumentException("Unknown Peano number type");
     }
 
     static Peano div(Peano a, Peano b) {
-        return a;
+        if (b instanceof Peano.Zero) {
+            throw new ArithmeticException("divide by 0");
+        } else if (a instanceof Peano.Zero) {
+            return Peano.Zero.INSTANCE;
+        } else {
+            return divHelper(a, b, Peano.Zero.INSTANCE);
+        }
+    }
+
+    static Peano divHelper(Peano a, Peano b, Peano count) {
+        if (a instanceof Peano.Zero) {
+            return count;
+        } else {
+            try {
+                Peano result = sub(a, b);
+                return divHelper(result, b, new Peano.Succ(count));
+            } catch (ArithmeticException e) {
+                return count;
+            }
+        }
     }
 
     static boolean even(Peano peano) {
-        return true;
+        if (peano instanceof Peano.Zero) {
+            return true;
+        } else if (peano instanceof Peano.Succ) {
+            return !even(((Peano.Succ) peano).getPeano());
+        }
+        throw new IllegalArgumentException("Unknown Peano number type");
     }
 
     static boolean odd(Peano peano) {
-        return true;
+        if (peano instanceof Peano.Zero) {
+            return false;
+        } else if (peano instanceof Peano.Succ) {
+            return !odd(((Peano.Succ) peano).getPeano());
+        }
+        throw new IllegalArgumentException("Unknown Peano number type");
     }
 
     static Ordering compare(Peano a, Peano b) {
-        return EQ;
+        if (a instanceof Peano.Zero && b instanceof Peano.Zero) {
+            return Ordering.EQ;
+        } else if (a instanceof Peano.Zero) {
+            return Ordering.LT;
+        } else if (b instanceof Peano.Zero) {
+            return Ordering.GT;
+        } else if (a instanceof Peano.Succ && b instanceof Peano.Succ) {
+            return compare(((Peano.Succ) a).getPeano(), ((Peano.Succ) b).getPeano());
+        }
+        throw new IllegalArgumentException("Unknown Peano number type");
     }
 }
