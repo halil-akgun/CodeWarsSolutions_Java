@@ -55,7 +55,19 @@ public class CW21_AlphabetWar_WoLoLooooooPriestsJoinTheWar {
     }
 
     public static String woLoLoooooo(String battlefield) {
+        String t = "tsbpw";
+        String j = "jzdqm";
 
-        return "not completed";
+        StringBuilder converted = new StringBuilder();
+
+        for (int i = 0; i < battlefield.length(); i++) {
+
+        }
+    }
+
+    private static boolean isConvertible(char left, char center, char right) {
+        return (center != 't' && center != 'j')
+                &&
+                !((left == 't' && right == 'j') || (left == 'j' && right == 't'));
     }
 }
