@@ -58,16 +58,49 @@ public class CW21_AlphabetWar_WoLoLooooooPriestsJoinTheWar {
         String t = "tsbpw";
         String j = "jzdqm";
 
-        StringBuilder converted = new StringBuilder();
+        StringBuilder convertedStr = new StringBuilder();
 
         for (int i = 0; i < battlefield.length(); i++) {
+            char left = i == 0 ? '?' : battlefield.charAt(i - 1);
+            char center = battlefield.charAt(i);
+            char right = i == battlefield.length() - 1 ? '?' : battlefield.charAt(i + 1);
+            char convertedChr = center;
+            if (isConvertible(left, center, right, t, j)) {
+                convertedChr = ("" + left + right).contains("t")
+                        ? t.charAt(j.indexOf(center))
+                        : j.charAt(t.indexOf(center));
+            }
+            convertedStr.append(convertedChr);
+        }
 
+        int rightPower = calculatePower(convertedStr.toString(), j);
+        int leftPower = calculatePower(convertedStr.toString(), t);
+        if (rightPower > leftPower) {
+            return "Right side wins!";
+        } else if (rightPower < leftPower) {
+            return "Left side wins!";
+        } else {
+            return "Let's fight again!";
         }
     }
 
-    private static boolean isConvertible(char left, char center, char right) {
+    private static boolean isConvertible(char left, char center, char right, String t, String j) {
         return (center != 't' && center != 'j')
                 &&
-                !((left == 't' && right == 'j') || (left == 'j' && right == 't'));
+                !((left == 't' && right == 'j') || (left == 'j' && right == 't'))
+                &&
+                (((left == 't' || right == 't') && j.contains(String.valueOf(center)))
+                        || ((left == 'j' || right == 'j') && t.contains(String.valueOf(center))));
+    }
+
+    private static int calculatePower(String str, String side) {
+        int power = 0;
+        for (int i = 0; i < str.length(); i++) {
+            int charPower = side.indexOf(str.charAt(i));
+            if (charPower != -1) {
+                power += charPower;
+            }
+        }
+        return power;
     }
 }
