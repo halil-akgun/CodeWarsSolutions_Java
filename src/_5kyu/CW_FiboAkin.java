@@ -49,10 +49,37 @@ public class CW_FiboAkin {
     }
 
     public static long lengthSupUK(int n, int k) {
-        // your code
+        long[] seq = new long[n];
+        seq[0] = 1;
+        seq[1] = 1;
+
+        long count = 0;
+        if (k <= 1) count += 2;
+        for (int i = 2; i < seq.length; i++) {
+            seq[i] = calculate(seq, i);
+            if (seq[i] >= k) count++;
+        }
+
+        return count;
     }
 
     public static long comp(int n) {
-        // your code
+        long[] seq = new long[n];
+        seq[0] = 1;
+        seq[1] = 1;
+
+        long count = 0;
+        for (int i = 2; i < seq.length; i++) {
+            seq[i] = calculate(seq, i);
+            if (seq[i] < seq[i - 1]) count++;
+        }
+
+        return count;
+    }
+
+    private static long calculate(long[] seq, int i) {
+        long a = seq[i - 1];
+        long b = seq[i - 2];
+        return seq[(int) (i - a)] + seq[(int) (i - b)];
     }
 }
