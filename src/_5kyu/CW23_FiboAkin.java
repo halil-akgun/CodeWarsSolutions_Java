@@ -37,7 +37,7 @@ comp(23) => 1 (since only u(16) < u(15))
 comp(100) => 22
 comp(200) => 63
  */
-public class CW_FiboAkin {
+public class CW23_FiboAkin {
     public static void main(String[] args) {
         System.out.println(lengthSupUK(23, 12)); // 4
         System.out.println(lengthSupUK(50, 10)); // 35
