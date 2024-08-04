@@ -50,13 +50,45 @@ A_A_B_A_A_B_	    A_A_B_	Wrong
 public class CW24_CutPasteErrors {
     public static void main(String[] args) {
         System.out.println(fixCutPaste("A_X_A_X_O_X_O_X_")); // A_X_O_X_
-        System.out.println(fixCutPaste("A_X_A_X_O_X_O_X_")); // A_X_A_X_O_X_X
-        System.out.println(fixCutPaste("A_A_B_A_A_B_")); // A_B_A_B
-        System.out.println(fixCutPaste("A_A_B_A_A_B_")); // A_A_B
+        System.out.println(fixCutPaste("Oops.Oops.Oops.Oops.Oops.Oops.Oops.Oops.Oops.")); // Oops.
+        System.out.println(fixCutPaste("REPEATED REPEATED REPEATED words at the start")); // REPEATED words at the start
+        System.out.println(fixCutPaste("This ends with some REPEATED WORDS REPEATED WORDS")); // This ends with some REPEATED WORDS
+        System.out.println(fixCutPaste("Here are some REPEATED REPEATED REPEATED words in the middle")); // Here are some REPEATED words in the middle
+        System.out.println(fixCutPaste(".....SOMETHING SOMETHING at the front")); // .....SOMETHING at the front
+        System.out.println(fixCutPaste("CCCCCCC")); // CCCCCCC
+        System.out.println(fixCutPaste("Here are               ______LOTS______LOTS of spaces")); // Here are               ______LOTS of spaces
     }
 
     public static String fixCutPaste(String text) {
-        // your cde here!
-        return text;
+        StringBuilder result = new StringBuilder();
+        boolean flag;
+        for (int i = 0; i < text.length(); i++) {
+            flag = true;
+            for (int j = i + 2; j < text.length(); j++) {
+                String substring = text.substring(i, j);
+                if (!substring.replaceAll(substring.substring(0, 1), "").isEmpty()
+                        && text.substring(j).startsWith(substring)
+                        && isNotDifferentWords(text, i, j)) {
+                    result.append(text, i, j);
+                    flag = false;
+                    int newI = i + ((j - i) * 2 - 1);
+                    int length = text.substring(i, j).length();
+                    for (int k = i + ((j - i) * 2); k < text.length() && text.substring(k).startsWith(text.substring(i, j)); k += length) {
+                        newI = k - 1 + length;
+                    }
+                    i = newI;
+                    break;
+                }
+            }
+            if (flag) result.append(text, i, i + 1);
+        }
+        return result.toString();
+    }
+
+    private static boolean isNotDifferentWords(String text, int i, int j) {
+        return i == 0
+                || text.charAt(i) == ' '
+                || text.substring(i-1, i).replaceAll("[\\p{Punct} ]", "").isEmpty()
+                || text.substring(i - 1, i).equals(text.substring(j - 1, j));
     }
 }
