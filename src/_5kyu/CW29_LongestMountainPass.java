@@ -40,28 +40,36 @@ public class CW29_LongestMountainPass {
     public static Result longestMountainPass(int[] mountains, int E) {
         int maxLength = 0;
         int bestStartIndex = 0;
+        int startIndex = 0;
+        int currentLength = 1;
 
-        for (int i = 0; i < mountains.length; i++) {
-            if (maxLength > mountains.length - i) break;
-            int currentLength = calculate(mountains, i, E, 1);
+        for (int i = 0; i < mountains.length - 1; i++) {
+
+            int heightDifference = mountains[i + 1] - mountains[i];
+
+            if (E < heightDifference) {
+                if (currentLength > maxLength) {
+                    maxLength = currentLength;
+                }
+                E += Math.max(mountains[startIndex + 1] - mountains[startIndex], 0);
+                startIndex++;
+                currentLength--;
+                i--;
+                continue;
+            }
+
+            if (heightDifference > 0) {
+                E -= heightDifference;
+            }
+
+            currentLength++;
             if (currentLength > maxLength) {
                 maxLength = currentLength;
-                bestStartIndex = i;
+                bestStartIndex = startIndex;
             }
         }
 
         return new Result(maxLength, bestStartIndex);
-    }
-
-    private static int calculate(int[] mountains, int i, int E, int count) {
-        if (i > mountains.length - 2) return count;
-
-        if (mountains[i + 1] > mountains[i]) {
-            if (E < (mountains[i + 1] - mountains[i])) return count;
-            return calculate(mountains, i + 1, E - (mountains[i + 1] - mountains[i]), ++count);
-        } else {
-            return calculate(mountains, ++i, E, ++count);
-        }
     }
 
     public static class Result {
