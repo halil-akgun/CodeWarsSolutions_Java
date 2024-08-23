@@ -31,7 +31,7 @@ Write functions:
 Note:
 You can write directly functions 3:, 5: and 7:. There is no need to write functions 1:, 2:, 4: 6: except out of pure curiosity.
  */
-public class CW41_WeirdPrimeGenerator {
+public class CW42_WeirdPrimeGenerator {
     public static void main(String[] args) {
         System.out.println(WeirdPrimeGen.countOnes(10)); // 8
         System.out.println(WeirdPrimeGen.countOnes(100)); // 90
