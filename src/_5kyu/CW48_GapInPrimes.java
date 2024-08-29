@@ -48,7 +48,6 @@ public class CW48_GapInPrimes {
         System.out.println(Arrays.toString(gap(6, 100, 110))); // null
     }
 
-
     public static long[] gap(int g, long m, long n) {
         long prevPrime = -1;
         for (long i = m; i <= n; i++) {
