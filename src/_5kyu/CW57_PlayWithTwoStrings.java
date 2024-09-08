@@ -39,18 +39,18 @@ public class CW57_PlayWithTwoStrings {
         return swap(a, b) + swap(b, a);
     }
 
-    private static String swap(String a, String b) {
-        String q = a.toLowerCase().chars().distinct().mapToObj(t -> String.valueOf((char) t)).collect(Collectors.joining());
-        for (int i = 0; i < q.length(); i++) {
-            String t = String.valueOf(q.charAt(i));
-            if (b.toLowerCase().replaceAll("[^" + t.toLowerCase() + "]", "").length() % 2 == 1) {
-                a = a.chars()
-                        .mapToObj(w -> t.equalsIgnoreCase(String.valueOf((char) w))
-                                ? String.valueOf((char) (Character.isUpperCase(w) ? Character.toLowerCase(w) : Character.toUpperCase(w)))
-                                : String.valueOf((char) w))
+    private static String swap(String source, String target) {
+        String distinctChars = source.toLowerCase().chars().distinct().mapToObj(c -> String.valueOf((char) c)).collect(Collectors.joining());
+        for (int i = 0; i < distinctChars.length(); i++) {
+            String currentChar = String.valueOf(distinctChars.charAt(i));
+            if (target.toLowerCase().replaceAll("[^" + currentChar.toLowerCase() + "]", "").length() % 2 == 1) {
+                source = source.chars()
+                        .mapToObj(c -> currentChar.equalsIgnoreCase(String.valueOf((char) c))
+                                ? String.valueOf((char) (Character.isUpperCase(c) ? Character.toLowerCase(c) : Character.toUpperCase(c)))
+                                : String.valueOf((char) c))
                         .collect(Collectors.joining());
             }
         }
-        return a;
+        return source;
     }
 }
