@@ -40,13 +40,17 @@ public class CW59_LandPerimeter {
 
         for (int i = 0; i < arr.length; i++) {
             for (int j = 0; j < arr[i].length(); j++) {
-                if ((i > 0 && arr[i - 1].charAt(j) != 'X' && arr[i].charAt(j) == 'X') || (i == 0 && arr[i].charAt(j) == 'X'))
+                if ((i > 0 && arr[i - 1].charAt(j) != 'X' && arr[i].charAt(j) == 'X')
+                        || (i == 0 && arr[i].charAt(j) == 'X'))
                     top++;
-                if ((i < arr.length - 1 && arr[i + 1].charAt(j) != 'X' && arr[i].charAt(j) == 'X') || (i == arr.length - 1 && arr[i].charAt(j) == 'X'))
+                if ((i < arr.length - 1 && arr[i + 1].charAt(j) != 'X' && arr[i].charAt(j) == 'X')
+                        || (i == arr.length - 1 && arr[i].charAt(j) == 'X'))
                     bottom++;
-                if ((j > 0 && arr[i].charAt(j - 1) != 'X' && arr[i].charAt(j) == 'X') || (j == 0 && arr[i].charAt(j) == 'X'))
+                if ((j > 0 && arr[i].charAt(j - 1) != 'X' && arr[i].charAt(j) == 'X')
+                        || (j == 0 && arr[i].charAt(j) == 'X'))
                     left++;
-                if ((j < arr[i].length() - 1 && arr[i].charAt(j + 1) != 'X' && arr[i].charAt(j) == 'X') || (j == arr[i].length() - 1 && arr[i].charAt(j) == 'X'))
+                if ((j < arr[i].length() - 1 && arr[i].charAt(j + 1) != 'X' && arr[i].charAt(j) == 'X')
+                        || (j == arr[i].length() - 1 && arr[i].charAt(j) == 'X'))
                     right++;
             }
         }
