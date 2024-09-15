@@ -13,7 +13,7 @@ pigIt('Hello world !');     // elloHay orldway !
 public class CW63_SimplePigLatin {
     public static void main(String[] args) {
         System.out.println(pigIt("Pig latin is cool")); // igPay atinlay siay oolcay
-        System.out.println(pigIt("Hello world !"));     // elloHay orldway !
+        System.out.println(pigIt("Hello world !")); // elloHay orldway !
     }
 
     public static String pigIt(String str) {
