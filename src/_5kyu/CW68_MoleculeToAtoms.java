@@ -1,6 +1,5 @@
 package _5kyu;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -27,82 +26,107 @@ Note that brackets may be round, square or curly and can also be nested. Index a
  */
 public class CW68_MoleculeToAtoms {
     public static void main(String[] args) {
-//        System.out.println(getAtoms("H2O")); // {"H": 2, "O": 1}
-//        System.out.println(getAtoms("Mg(OH)2")); // {"Mg": 1, "O": 2, "H": 2}
+        System.out.println(getAtoms("H2O")); // {"H": 2, "O": 1}
+        System.out.println(getAtoms("Mg(OH)2")); // {"Mg": 1, "O": 2, "H": 2}
         System.out.println(getAtoms("K4[ON(SO3)2]2")); // {"K": 4, "O": 14, "N": 2, "S": 4}
-//        System.out.println(getAtoms("pie"));
+        System.out.println(getAtoms("(C5H5)Fe(CO)2CH3")); // {"C"=8, "H"=8, "Fe"=1, "O"=2}
+        System.out.println(getAtoms("As2{Be4C5[BCo3(CO2)3]2}4Cu5")); // {"As"=2, "B"=8, "Cu"=5, "Be"=16, "C"=44, "Co"=24, "O"=48}
+        System.out.println(getAtoms("Mg(OH")); // throw an IllegalArgumentException
+        System.out.println(getAtoms("pie")); // throw an IllegalArgumentException
     }
 
+    private static final StringBuilder formulaBuilder = new StringBuilder();
+
     public static Map<String, Integer> getAtoms(String formula) {
-        System.out.println(formula);
-        if (Arrays.stream(formula.split("[^A-Za-z]"))
-                .filter(t -> !t.isEmpty() && (Character.isLowerCase(t.charAt(0)) || t.length() > 2)).toArray().length > 0)
-            throw new IllegalArgumentException();
 
-        StringBuilder asd = new StringBuilder();
-        asd.append("(").append(formula).append(")");
+        validateFormula(formula);
 
-        Map<String, Integer> map = new HashMap<>();
+        formulaBuilder.setLength(0);
+        formulaBuilder.append("(").append(formula).append(")");
 
-        for (int i = asd.length() - 1; i >= 0; i--) {
-            if (q(asd.charAt(i))) {
-                int z = t(asd.toString(), i);
-                c(asd.substring(i + 1, z), e(asd.substring(z + 1)), map);
-                asd.replace(i, i + 1, "*");
-                asd.replace(z, z + 1, "*");
-                for (int j = i + 1; j < z; j++) {
-                    if (Character.isDigit(asd.charAt(j)))
-                        asd.replace(j, j + 1, "*");
-                }
-                for (int j = z + 1; j < asd.length(); j++) {
-                    if (Character.isDigit(asd.charAt(j)))
-                        asd.replace(j, j + 1, "*");
-                    else
-                        break;
-                }
+        for (int i = formulaBuilder.length() - 1; i >= 0; i--) {
+            if (isOpeningBracket(formulaBuilder.charAt(i))) {
+                int closingBracketIndex = findClosingBracketIndex(formulaBuilder.toString(), i);
+                validateBrackets(i, closingBracketIndex);
+                processBracketedSection(i, closingBracketIndex);
             }
         }
 
-        return map;
+        return parseAtoms(formulaBuilder.toString().split("(?=[A-Z])"));
     }
 
-    private static void c(String s, int e, Map<String, Integer> map) {
-        String[] split = s.replaceAll("[*]", "").split("(?=[A-Z])");
-        System.out.println(s);
-        System.out.println(Arrays.toString(split));
-        for (String string : split) {
-            String w = string.replaceAll("[0-9]", "");
-            String n = string.replaceAll("[^0-9]", "");
-            int b = (!n.isEmpty() ? Integer.parseInt(n) : 1) * e;
-            System.out.println("***************");
-            System.out.println(w);
-            System.out.println(b);
-            System.out.println(map);
-            map.put(w, map.getOrDefault(w, 1) * b);
+    private static void validateFormula(String formula) {
+        if (formula.chars().filter(c -> c == '(').count() != formula.chars().filter(c -> c == ')').count()
+                || formula.chars().filter(c -> c == '[').count() != formula.chars().filter(c -> c == ']').count()
+                || formula.chars().filter(c -> c == '{').count() != formula.chars().filter(c -> c == '}').count()) {
+            throw new IllegalArgumentException("Invalid formula: mismatched brackets.");
         }
     }
 
-    private static boolean q(char c) {
+    private static void validateBrackets(int openingIndex, int closingIndex) {
+        if (closingIndex == -1) {
+            throw new IllegalArgumentException("Invalid formula: missing closing bracket.");
+        }
+        char openingBracket = formulaBuilder.charAt(openingIndex);
+        char closingBracket = formulaBuilder.charAt(closingIndex);
+        if (!((openingBracket == '(' && closingBracket == ')')
+                || (openingBracket == '[' && closingBracket == ']')
+                || (openingBracket == '{' && closingBracket == '}'))) {
+            throw new IllegalArgumentException("Invalid formula: unmatched brackets.");
+        }
+    }
+
+    private static void validateAtom(String atom) {
+        if (!atom.matches("[A-Z][a-z]?[0-9]*")) {
+            throw new IllegalArgumentException("Invalid atom format: " + atom);
+        }
+    }
+
+    private static void processBracketedSection(int openingIndex, int closingIndex) {
+        String[] atomsInsideBrackets = formulaBuilder.substring(openingIndex + 1, closingIndex).split("(?=[A-Z])");
+        Map<String, Integer> atomCounts = parseAtoms(atomsInsideBrackets);
+
+        StringBuilder multiplierStr = new StringBuilder();
+        for (int j = closingIndex + 1; j < formulaBuilder.length(); j++) {
+            if (Character.isDigit(formulaBuilder.charAt(j))) {
+                multiplierStr.append(formulaBuilder.charAt(j));
+            } else {
+                break;
+            }
+        }
+
+        int multiplier = !multiplierStr.isEmpty() ? Integer.parseInt(multiplierStr.toString()) : 1;
+
+        StringBuilder replacement = new StringBuilder();
+        for (Map.Entry<String, Integer> entry : atomCounts.entrySet()) {
+            validateAtom(entry.getKey());
+            replacement.append(entry.getKey()).append(entry.getValue() * multiplier);
+        }
+
+        formulaBuilder.delete(openingIndex, closingIndex + 1 + multiplierStr.length());
+        formulaBuilder.insert(openingIndex, replacement);
+    }
+
+    private static Map<String, Integer> parseAtoms(String[] atoms) {
+        Map<String, Integer> atomCountMap = new HashMap<>();
+        for (String atom : atoms) {
+            String element = atom.replaceAll("[0-9]", "");
+            int count = atom.replaceAll("[^0-9]", "").isEmpty() ? 1 : Integer.parseInt(atom.replaceAll("[^0-9]", ""));
+            atomCountMap.put(element, atomCountMap.getOrDefault(element, 0) + count);
+        }
+        return atomCountMap;
+    }
+
+    private static boolean isOpeningBracket(char c) {
         return c == '(' || c == '[' || c == '{';
     }
 
-    private static int t(String s, int a) {
-        for (int i = a; i < s.length(); i++) {
-            if (s.charAt(i) == ')' || s.charAt(i) == ']' || s.charAt(i) == '}')
+    private static int findClosingBracketIndex(String formula, int openingIndex) {
+        for (int i = openingIndex; i < formula.length(); i++) {
+            if (formula.charAt(i) == ')' || formula.charAt(i) == ']' || formula.charAt(i) == '}') {
                 return i;
+            }
         }
         return -1;
-    }
-
-    private static int e(String s) {
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < s.length(); i++) {
-            if (Character.isDigit(s.charAt(i)))
-                sb.append(s.charAt(i));
-            else
-                break;
-        }
-
-        return sb.isEmpty() ? 1 : Integer.parseInt(sb.toString());
     }
 }
