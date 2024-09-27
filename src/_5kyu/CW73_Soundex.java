@@ -45,48 +45,56 @@ public class CW73_Soundex {
     public static void main(String[] args) {
         System.out.println(soundex("Sarah Connor")); // S600 C560
         System.out.println(soundex("uryrtkzp")); // U663
+        System.out.println(soundex("zxqurlwbx")); // Z641
     }
 
     public static String soundex(final String names) {
-        System.out.println(names);
-        String[] a = names.toLowerCase().split("\\s+");
-        for (int i = 0; i < a.length; i++) {
-            String letters = a[i].replaceAll("[^A-Za-z]", "").toUpperCase();
+        String[] words = names.toUpperCase().split("\\s+");
+        for (int i = 0; i < words.length; i++) {
+            String letters = words[i].replaceAll("[^A-Z]", "");
             if (!letters.isEmpty()) {
                 String firstLetter = letters.substring(0, 1);
-                a[i] = a[i].charAt(0) + a[i].substring(1).replaceAll("[hw]", "");
-                a[i] = a[i].chars().mapToObj(t -> q((char) t)).map(String::valueOf).collect(Collectors.joining());
-                a[i] = s(a[i]);
-                a[i] = a[i].charAt(0) + a[i].substring(1).replaceAll("[aeiouy]", "");
-                a[i] = firstLetter + a[i].substring(Character.isDigit(a[i].charAt(0)) ? 0 : 1);
-                a[i] = (a[i] + "0".repeat(3)).substring(0, 4);
+                words[i] = words[i].charAt(0) + words[i].substring(1).replaceAll("[HW]", "");
+                words[i] = words[i].chars().mapToObj(t -> mapToSoundexDigit((char) t)).map(String::valueOf).collect(Collectors.joining());
+                words[i] = removeConsecutiveDuplicates(words[i]);
+                words[i] = words[i].charAt(0) + words[i].substring(1).replaceAll("[AEIOUY]", "");
+                words[i] = handleFirstCharacter(firstLetter, words[i]);
+                words[i] = (words[i] + "0".repeat(3)).substring(0, 4);
             }
         }
 
-        return String.join(" ", a);
+        return String.join(" ", words);
     }
 
-    private static String s(String t) {
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < t.length(); i++) {
-            if (!(i > 0 && t.charAt(i - 1) == t.charAt(i))) {
-                sb.append(t.charAt(i));
-            }
+    private static String handleFirstCharacter(String firstLetter, String word) {
+        if (Character.isDigit(word.charAt(0)))
+            word = firstLetter + word.substring(1);
+        StringBuilder sb = new StringBuilder().append(word.charAt(0));
+        for (int i = 1; i < word.length(); i++) {
+            if (Character.isDigit(word.charAt(i)))
+                sb.append(word.charAt(i));
         }
-        System.out.println("****************");
-        System.out.println(t);
-        System.out.println(sb);
         return sb.toString();
     }
 
-    private static char q(char c) {
+    private static String removeConsecutiveDuplicates(String input) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < input.length(); i++) {
+            if (!(i > 0 && input.charAt(i - 1) == input.charAt(i))) {
+                sb.append(input.charAt(i));
+            }
+        }
+        return sb.toString();
+    }
+
+    private static char mapToSoundexDigit(char c) {
         return switch (c) {
-            case 'b', 'f', 'p', 'v' -> '1';
-            case 'c', 'g', 'j', 'k', 'q', 's', 'x', 'z' -> '2';
-            case 'd', 't' -> '3';
-            case 'l' -> '4';
-            case 'm', 'n' -> '5';
-            case 'r' -> '6';
+            case 'B', 'F', 'P', 'V' -> '1';
+            case 'C', 'G', 'J', 'K', 'Q', 'S', 'X', 'Z' -> '2';
+            case 'D', 'T' -> '3';
+            case 'L' -> '4';
+            case 'M', 'N' -> '5';
+            case 'R' -> '6';
             default -> c;
         };
     }
