@@ -32,7 +32,7 @@ public class CW74_LongestCommonSubsequence {
         System.out.println(lcs("abcdef", "abc")); // abc
         System.out.println(lcs("abcdef", "acf")); // acf
         System.out.println(lcs("132535365", "123456789")); // 12356
-        System.out.println(lcs("finaltest", "zzzfinallyzzz")); //
+        System.out.println(lcs("finaltest", "zzzfinallyzzz")); // final
     }
 
     public static String lcs(String x, String y) {
