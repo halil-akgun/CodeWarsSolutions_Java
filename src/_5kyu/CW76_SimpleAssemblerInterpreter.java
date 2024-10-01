@@ -1,6 +1,5 @@
 package _5kyu;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -47,37 +46,41 @@ So, the function should return:
  */
 public class CW76_SimpleAssemblerInterpreter {
     public static void main(String[] args) {
-//        System.out.println(interpret(new String[]{"mov a 5", "inc a", "dec a", "dec a", "jnz a -1", "inc a"})); // {a=1}
-        System.out.println(interpret(new String[]{"mov a -10", "mov b a", "inc a", "dec b", "jnz a -2"})); //
+        System.out.println(interpret(new String[]{"mov a 5", "inc a", "dec a", "dec a", "jnz a -1", "inc a"})); // {a=1}
+        System.out.println(interpret(new String[]{"mov a -10", "mov b a", "inc a", "dec b", "jnz a -2"})); // {a=0, b=-20}
+        System.out.println(interpret(new String[]{
+                "mov a 1", "mov b 1", "mov c 0", "mov d 26", "jnz c 2", "jnz 1 5",
+                "mov c 7", "inc d", "dec c", "jnz c -2", "mov c a", "inc a",
+                "dec b", "jnz b -2", "mov b c", "dec d", "jnz d -6",
+                "mov c 18", "mov d 11", "inc a", "dec d", "jnz d -2",
+                "dec c", "jnz c -5"
+        })); // {a=318009, b=196418, c=0, d=0}
     }
 
     public static Map<String, Integer> interpret(String[] program) {
 
-        System.out.println(Arrays.toString(program));
-
-        Map<String, Integer> map = new HashMap<>();
+        Map<String, Integer> registers = new HashMap<>();
 
         for (int i = 0; i < program.length; i++) {
-            String[] w = program[i].split(" ");
-            System.out.println(map);
-            switch (w[0]) {
+            String[] instructionParts = program[i].split(" ");
+            switch (instructionParts[0]) {
                 case "mov" -> {
                     try {
-                        int a = Integer.parseInt(w[2]);
-                        map.put(w[1], a);
+                        int a = Integer.parseInt(instructionParts[2]);
+                        registers.put(instructionParts[1], a);
                     } catch (Exception e) {
-                        map.put(w[1], map.get(w[2]));
+                        registers.put(instructionParts[1], registers.get(instructionParts[2]));
                     }
                 }
-                case "inc" -> map.put(w[1], map.get(w[1]) + 1);
-                case "dec" -> map.put(w[1], map.get(w[1]) - 1);
+                case "inc" -> registers.put(instructionParts[1], registers.get(instructionParts[1]) + 1);
+                case "dec" -> registers.put(instructionParts[1], registers.get(instructionParts[1]) - 1);
                 default -> {
-                    if (map.get(w[1]) != 0)
-                        i = i + Integer.parseInt(w[2]) - 1;
+                    if (Character.isDigit(instructionParts[1].charAt(0)) || registers.get(instructionParts[1]) != 0)
+                        i = i + Integer.parseInt(instructionParts[2]) - 1;
                 }
             }
         }
 
-        return map;
+        return registers;
     }
 }
