@@ -55,7 +55,6 @@ function minOperations(arr, threshold, d) {
 
     let minOps = Infinity; // Set minimum operations to infinity
 
-    console.log(operationsMap);
     // Check if there are enough operations for each value
     for (const [key, opsList] of operationsMap.entries()) {
         if (opsList.length >= threshold) {
